@@ -3,7 +3,6 @@ from aiogram import types
 from loader import dp, bot
 
 
-# Echo bot
 @dp.message_handler(state=None)
 async def bot_echo(message: types.Message):
 
@@ -14,6 +13,7 @@ async def bot_echo(message: types.Message):
     # обработка категории (текст)
     else:
         await message.answer('такой категории нет')
+
 
 @dp.message_handler(state=ChooseCategory.stateChoosingCount)
 async def bot_echo(message: types.Message):
