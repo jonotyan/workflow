@@ -24,5 +24,3 @@ class PictureGeter:
         return __get_links()
 
 
-
-

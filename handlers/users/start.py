@@ -11,3 +11,6 @@ async def bot_start(message: types.Message):
     await message.answer(f"Привет, {message.from_user.full_name}!")
     await message.answer(welcome_text)
 
+# TODO: Добавить фильтр админа и режим вкл/выкл режим логирования
+# Включенный режим должен
+# присылать админу логи в чат с каждого действия пользователя
