@@ -1,5 +1,6 @@
 from aiogram import types
 
+
 from loader import dp, bot
 
 
@@ -24,3 +25,12 @@ async def bot_echo(message: types.Message):
     # отправляем медиагруппу
     bot.send_media_group(chat_id, media)
     # удаляем из папки
+=======
+from loader import dp
+
+
+# Echo bot
+@dp.message_handler(state=None)
+async def bot_echo(message: types.Message):
+    await message.answer('Ты написал', message.text)
+
