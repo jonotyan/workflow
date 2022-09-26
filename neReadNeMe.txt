@@ -1,2 +1,0 @@
-bash: c: command not found
-это тестовый текстовый файл.
