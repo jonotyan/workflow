@@ -25,7 +25,7 @@ async def bot_echo(message: types.Message):
     # отправляем медиагруппу
     bot.send_media_group(chat_id, media)
     # удаляем из папки
-=======
+
 from loader import dp
 
 
