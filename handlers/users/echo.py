@@ -1,18 +1,17 @@
 from aiogram import types
-
-
+from .web_requests import PictureGeter, CategoryList
 from loader import dp, bot
+from states.states import ChooseCategory
 
 
 @dp.message_handler(state=None)
 async def bot_echo(message: types.Message):
-
-    if message.text.lower().strip() in CategoryList:
-        # save category
+    if message.text.capitalize() in CategoryList:
         ChooseCategory.stateChoosingCount.set()
         await message.answer('Ты написал', message.text)
-    # обработка категории (текст)
     else:
+        for i in CategoryList:
+            print(i.isupper())
         await message.answer('такой категории нет')
 
 
@@ -26,11 +25,4 @@ async def bot_echo(message: types.Message):
     bot.send_media_group(chat_id, media)
     # удаляем из папки
 
-from loader import dp
-
-
-# Echo bot
-@dp.message_handler(state=None)
-async def bot_echo(message: types.Message):
-    await message.answer('Ты написал', message.text)
 
