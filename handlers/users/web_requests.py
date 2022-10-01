@@ -63,6 +63,7 @@ CategoryList = [
 "Фрукты",
 "Цветы"]
 
+
 class PictureGeter:
     url = "https://7fon.org/Обои/"
     r = get(url)
@@ -83,15 +84,15 @@ class PictureGeter:
         cls.url += category
 
     @classmethod
-    def __open_next_page(cls, category):
-        cls.__set_category(category=category)
+    def __open_next_page(cls):
         cls.on_page += 1
         url_of_new_page = cls.url + f"/{cls.on_page}.html"
         return url_of_new_page
 
     @classmethod
     def __reset_page_info(cls, cat):
-        cls.url = cls.__open_next_page(category=cat)
+        cls.__set_category(category=cat)
+        cls.url = cls.__open_next_page()
         r = get(cls.url)
         start_indx = r.text.find('<div id="cbox">')
         end = r.text.find('<ins class="adsbygoogle"')
@@ -128,5 +129,12 @@ class PictureGeter:
     def get_list_with_pictures(cls, count_of_pictures: int, category: str):
         final_result = cls.__check_count(count_of_pictures+1, category=category)
         final_result_ = final_result[1:]
-        cls.__reset_url()
         return final_result_
+
+
+a = PictureGeter.get_list_with_pictures(1, "цветы")
+
+print(a)
+
+s = PictureGeter.get_list_with_pictures(1, "фоны")
+print(s)

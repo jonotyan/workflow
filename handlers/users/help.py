@@ -9,7 +9,6 @@ async def bot_help(message: types.Message):
     text = ("Команды: ",
             "/start - Запустить бота",
             "/help - Показать все команды",
-            "/category - Показать все категории",
-            "/help - Показать все команды")
+            "/category - Показать все категории")
 
     await message.answer("\n".join(text))
