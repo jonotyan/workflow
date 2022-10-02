@@ -2,7 +2,7 @@ from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
 from loader import dp
 from data.config import ADMINS
-from handlers.users.start import bot_start
+from handlers.commands.start import bot_start
 
 
 async def on_startup_notify():
