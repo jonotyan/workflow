@@ -17,14 +17,27 @@ temp: str = ""
 @dp.message_handler(state=ChooseCategory.stateChoosingCat)
 async def set_category(message: types.Message):
     global temp
-    for_check = message.text.capitalize()
-    if for_check in CategoryList:
-        await message.answer(
-            f"Вы выбрали: {message.text}\nТеперь укажите количество картинок которое хотите получить (не больше 100)")
-        temp = for_check
+    results_of_settings = await set_category(message)
+    
+    if results_of_settings[1]:
         await ChooseCategory.stateChoosingCount.set()
-    else:
-        await message.answer('Такой категории нет, возможно вы ввели цифру или допустили орфографическую ошибку\nВы можете попробовать снова ;)')
+
+    temp = results_of_settings[2]
+    
+    await message.answer(results_of_settings[0])
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @dp.errors_handler(exception=RetryAfter)

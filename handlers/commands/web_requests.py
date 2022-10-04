@@ -1,5 +1,9 @@
 from requests import get
 
+# TODO: превратить список в словарь {nameOfCategory: pageNumber}
+# nameOfCategory (str)"Абстрактные"
+# pageNumber (int)
+
 CategoryList = [
 "Абстрактные",
 "Авиация",

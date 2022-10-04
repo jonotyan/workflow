@@ -3,7 +3,7 @@ from .web_requests import CategoryList
 from states.states import ChooseCategory
 from loader import dp
 
-
+# TODO: переименовать функцию
 async def something(message):
     text = ''
     num = 0
