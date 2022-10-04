@@ -1,5 +1,5 @@
 from aiogram import types
-from .web_requests import CategoryList
+from utils.parser.web_requests import CategoryList
 from states.states import ChooseCategory
 from loader import dp
 

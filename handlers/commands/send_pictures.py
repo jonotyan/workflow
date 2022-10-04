@@ -1,15 +1,13 @@
 from aiogram import types
-import states.states
-from .web_requests import PictureGeter, CategoryList
+from utils.parser.web_requests import PictureGeter, CategoryList
 from loader import dp, bot
 from states.states import ChooseCategory
 from aiogram.dispatcher import FSMContext
 from aiogram.utils.exceptions import InvalidHTTPUrlContent, WrongFileIdentifier, RetryAfter
 from keyboards.default.new_keyboard import keyboard
-from aiogram.dispatcher.filters import Text, Command
+from aiogram.dispatcher.filters import Text
 from .category import something
-from data.config import change_admin_mode, get_admin_mode, ADMINS
-from aiogram.dispatcher.filters.builtin import AdminFilter
+from data.config import ADMINS
 
 temp: str = ""
 
