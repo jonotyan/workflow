@@ -1,5 +1,5 @@
 async def set_category(message):
-    passfor_check = message.text.capitalize()
+    for_check = message.text.capitalize()
     yes_no = False
     temp = None
     if for_check in CategoryList:
@@ -17,12 +17,12 @@ async def set_category(message):
 # TODO: в утилитах в другой папке модуль с 
 # переменными и методами работы с ними (set get)
 
-# TODO: убрать вебреквест в утилиты
+# TODO: убрать вебреквест в утилиты|done
 
 # TODO: send_picture сделать модулем более высокого уровня
 
-# TODO: бд убрать в дату
+# TODO: бд убрать в дату\done
 
-# TODO: придумать максимально понятные имена модулей и функций
+# TODO: придумать максимально понятные имена модулей и функций\ okay, i will rty to do it as good as i can think =)
 # и переменных
 
