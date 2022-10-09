@@ -1,6 +1,7 @@
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 
-class ChooseCategory(StatesGroup):
+class StatesGroup(StatesGroup):
     stateChoosingCat = State()
     stateChoosingCount = State()
+    stateContinueOrStop = State()

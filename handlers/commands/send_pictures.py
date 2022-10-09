@@ -1,75 +1,67 @@
 from aiogram import types
-from utils.parser.web_requests import PictureGeter
+from utils.parser.web_requests import CategoryDict
 from loader import dp, bot
-from states.states import ChooseCategory
+from states.states import StatesGroup
 from aiogram.dispatcher import FSMContext
 from aiogram.utils.exceptions import InvalidHTTPUrlContent, WrongFileIdentifier, RetryAfter
-from keyboards.default.new_keyboard import keyboard
-from keyboards.inline.inline_category_choosing import init_keyboard, keyboard_inline, switch_page_on_back, switch_page_on_next, reset_keyboard
+from keyboards.default.reply_keyboard import keyboard_continue_or_stop
+from keyboards.inline.inline_keyboard_for_category_choosing import init_keyboard, switch_page_on_back, switch_page_on_next
 from aiogram.dispatcher.filters import Text
 from .category import category_command_respond
-from data.config import ADMINS
-from LowLevelModuls.messages import set_category
+from data.config import IS_ADMIN
+from LowLevelModuls.messages import set_category_for_parser_and_run
+from ..vars_for_handlers.vars import *
 
 
-@dp.callback_query_handler(text=["switch_page_on_next", "switch_page_on_back"])
-async def get_answer(call: types.CallbackQuery):
+@dp.callback_query_handler(text=["switch_page_on_next", "switch_page_on_back"], state=StatesGroup.stateChoosingCat)
+async def page_buttons(call: types.CallbackQuery):
     if call.data == "switch_page_on_next":
-        await reset_keyboard(await init_keyboard(await switch_page_on_next()))
+        now_on_page = await switch_page_on_next()
+        new_keyboard = await init_keyboard(now_on_page)
+        await call.message.edit_reply_markup(reply_markup=new_keyboard)
+
     elif call.data == "switch_page_on_back":
-        await reset_keyboard(await init_keyboard(await switch_page_on_back()))
-    await call.answer()
+        now_on_page = await switch_page_on_back()
+        new_keyboard = await init_keyboard(now_on_page)
+        await call.message.edit_reply_markup(reply_markup=new_keyboard)
 
 
-@dp.message_handler(state=ChooseCategory.stateChoosingCat)
-async def get_category_chosen_by_user(message: types.Message):
-    await message.answer("sfs", reply_markup=await init_keyboard(1))
-
-    # global temp
-    # results_of_settings = await set_category(message)
-    #
-    # if results_of_settings[1]:
-    #     await ChooseCategory.stateChoosingCount.set()
-    #
-    # temp = results_of_settings[2]
-    #
-    # await message.answer(results_of_settings[0])
+@dp.callback_query_handler(text=CategoryDict.keys(), state=StatesGroup.stateChoosingCat)
+async def get_category_chosen_by_user(call: types.CallbackQuery):
+    await set_temp_category(call.data)
+    await call.answer(f"Выбрана категория : {call.data}")
+    await bot.delete_message(message_id=await get_message_id_to_edit(), chat_id=call.from_user.id)
+    await bot.send_message(chat_id=call.from_user.id, text=f"Вы выбрали категорию: {call.data} =)")
+    await bot.send_message(chat_id=call.from_user.id, text="А теперь введите количество желаемых картинок ;)")
+    await StatesGroup.stateChoosingCount.set()
 
 
 @dp.errors_handler(exception=RetryAfter)
-@dp.message_handler(state=ChooseCategory.stateChoosingCount)
+@dp.message_handler(state=StatesGroup.stateChoosingCount)
 async def set_count(message: types.Message, state: FSMContext):
-    if int(message.text) > 100:
-        await message.answer("Дайте мне немного времени")
-    parsed_pictures = PictureGeter.get_list_with_urls_on_pictures(int(message.text), temp)
-    print(parsed_pictures)
-    for url_link in parsed_pictures:
-        try:
-            await bot.send_photo(chat_id=message.chat.id, photo=url_link)
-        except InvalidHTTPUrlContent or WrongFileIdentifier or AttributeError:
-            pass
-
+    await set_category_for_parser_and_run(message)
     await state.finish()
-    await message.answer("Хотите выбрать еще одну категорию ?", reply_markup=keyboard)
+    await message.answer("Хотите выбрать еще одну категорию ?", reply_markup=keyboard_continue_or_stop)
+    await StatesGroup.stateContinueOrStop.set()
 
 
-@dp.message_handler(Text(equals=["Да"]))
+@dp.message_handler(Text(equals=["Да"]), state=StatesGroup.stateContinueOrStop)
 async def reply_on(message: types.Message):
     await message.answer("Как пожелаете =)", reply_markup=types.ReplyKeyboardRemove())
     await category_command_respond(message)
-    await ChooseCategory.stateChoosingCat.set()
 
 
-@dp.message_handler(Text(equals=["Нет"]))
-async def reply_on(message: types.Message):
+@dp.message_handler(Text(equals=["Нет"]), state=StatesGroup.stateContinueOrStop)
+async def reply_on(message: types.Message, state: FSMContext):
     await message.answer("Мы благодарны за то что вы используете нашего бота ;)", reply_markup=types.ReplyKeyboardRemove())
+    await state.finish()
 
 
 @dp.message_handler(commands=['Get_DataBase'])
 async def get_data_base(message: types.Message):
-    if message.chat.id == int(ADMINS[0]):
+    if IS_ADMIN(message.chat.id):
         db = "d"
         await message.answer(db)
     else:
-        await message.answer("Ты золотце, если ты видишь это сообщение значит все работает как нада)")
-        print(message.chat.id)
+        await message.answer("У вас нет на это прав ;)")
+

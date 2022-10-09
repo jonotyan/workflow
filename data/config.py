@@ -10,13 +10,9 @@ for adm in tg_data["admins"].split():
 BOT_TOKEN = tg_data["token"]
 ADMINS = admins
 
-ADMIN_MODE = False
 
-
-def change_admin_mode(mode: bool):
-    global ADMIN_MODE
-    ADMIN_MODE = mode
-
-
-async def get_admin_mode():
-    return ADMIN_MODE
+async def IS_ADMIN(id):
+    if ADMINS[0] == id:
+        return True
+    else:
+        return False

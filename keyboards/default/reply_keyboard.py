@@ -1,6 +1,6 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-keyboard = ReplyKeyboardMarkup(
+keyboard_continue_or_stop = ReplyKeyboardMarkup(
     keyboard=[
         [KeyboardButton(text="Да"),
          KeyboardButton(text="Нет")]
