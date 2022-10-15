@@ -1,9 +1,7 @@
 from aiogram import types
-
 from handlers.vars_for_handlers.vars import set_message_id_to_edit
-from utils.parser.web_requests import CategoryDict
 from states.states import StatesGroup
-from loader import dp, bot
+from loader import dp
 from keyboards.inline.inline_keyboard_for_category_choosing import init_keyboard
 
 

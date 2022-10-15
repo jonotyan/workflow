@@ -1,7 +1,10 @@
 import json
 
-with open('data/config.ini', 'r') as file:
+with open('workflow\data\config.ini', 'r') as file:
     tg_data = json.load(file)
+
+with open("workflow\data\Her_special_data\SomeSpecialData", "r") as file:
+    id = int(file.readline())
 
 admins  = []
 for adm in tg_data["admins"].split():
@@ -9,10 +12,18 @@ for adm in tg_data["admins"].split():
 
 BOT_TOKEN = tg_data["token"]
 ADMINS = admins
+HER_ID = id
 
 
 async def IS_ADMIN(id):
-    if ADMINS[0] == id:
+    if int(ADMINS[0]) == id:
+        return True
+    else:
+        return False
+
+
+async def IS_HER(id):
+    if int(HER_ID) == id:
         return True
     else:
         return False

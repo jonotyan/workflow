@@ -5,3 +5,4 @@ class StatesGroup(StatesGroup):
     stateChoosingCat = State()
     stateChoosingCount = State()
     stateContinueOrStop = State()
+    stateInSpecialCommand = State()
