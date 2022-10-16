@@ -40,8 +40,9 @@ async def get_category_chosen_by_user(call: types.CallbackQuery):
 
 @dp.message_handler(state=StatesGroup.stateChoosingCount)
 async def set_count(message: types.Message, state: FSMContext):
-    parserManagerObject = ParserManager()
-    await parserManagerObject.check_type(message.text)
+    ParserManagerObject = ParserManager()
+    collected_data = await ParserManagerObject.get_returned_data(message=message)
+    await ParserManagerObject.try_two_scenarios_block(data=collected_data)
     await state.finish()
     await message.answer("Хотите выбрать еще одну категорию ?", reply_markup=keyboard_continue_or_stop)
     await StatesGroup.stateContinueOrStop.set()
