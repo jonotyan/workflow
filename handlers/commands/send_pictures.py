@@ -1,3 +1,4 @@
+from email import message
 from keyboards.inline.inline_keyboard_for_category_choosing import \
 (
     init_keyboard, switch_page_on_back, switch_page_on_next
@@ -6,6 +7,7 @@ from keyboards.default.reply_keyboard import keyboard_continue_or_stop
 from LowLevelModuls.process_user_input import ParserManager
 from utils.parser.web_requests import CategoryDict
 from data.config import IS_ADMIN, IS_HER, ADMINS
+from utils.db_api.db_api import DataBaseManager
 from .category import category_command_respond
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher import FSMContext
@@ -13,6 +15,7 @@ from ..vars_for_handlers.vars import *
 from states.states import StatesGroup
 from loader import dp, bot
 from aiogram import types
+from datetime import date
 from codecs import open
 
 
@@ -31,6 +34,10 @@ async def page_buttons(call: types.CallbackQuery):
 @dp.callback_query_handler(text=CategoryDict.keys(), state=StatesGroup.stateChoosingCat)
 async def get_category_chosen_by_user(call: types.CallbackQuery):
     await set_temp_category(call.data)
+    DataBaseManagerObject = DataBaseManager()
+    DataBaseManagerObject.connect("users_logs")
+    DataBaseManagerObject.add_new_info("logi", "user_id, date_time, command", f"{call.from_user.id}, {str(date.today())}, '{call.data}'")
+    DataBaseManagerObject.disconnect()
     await call.answer(f"Выбрана категория : {call.data}")
     text = f"Вы выбрали категорию: {call.data} =)\nА теперь введите количество желаемых картинок ;)"
     await bot.delete_message(message_id=await get_message_id_to_edit(), chat_id=call.from_user.id)
@@ -65,7 +72,10 @@ async def reply_on_no(message: types.Message, state: FSMContext):
 @dp.message_handler(commands=['Get_DataBase'])
 async def get_data_base(message: types.Message):
     if await IS_ADMIN(message.chat.id):
-        db = "DataBase for admin {work in progress}"
+        DataBaseManagerObject = DataBaseManager()
+        DataBaseManagerObject.connect("users_logs")
+        db = DataBaseManagerObject.get_info("*", "users")
+        DataBaseManagerObject.disconnect()
         await message.answer(db)
     else:
         await message.answer("У вас нет на это прав ;)")
