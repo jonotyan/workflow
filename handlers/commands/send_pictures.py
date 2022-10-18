@@ -17,6 +17,7 @@ from loader import dp, bot
 from aiogram import types
 from datetime import date
 from codecs import open
+from loader import log
 
 
 @dp.callback_query_handler(text=["switch_page_on_next", "switch_page_on_back"], state=StatesGroup.stateChoosingCat)
@@ -24,6 +25,7 @@ async def page_buttons(call: types.CallbackQuery):
     if call.data == "switch_page_on_next":
         now_on_page = await switch_page_on_next()
     elif call.data == "switch_page_on_back":
+        log.info('switch_page_on_back')
         now_on_page = await switch_page_on_back()
     else:
         now_on_page = 0
