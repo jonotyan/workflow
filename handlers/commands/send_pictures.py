@@ -100,6 +100,7 @@ async def result_of_special_command(msg: types.Message, state: FSMContext):
         await msg.answer(line)
         await bot.send_sticker(chat_id=msg.chat.id, sticker="вам не нада это =)")
         file.close()
+        await state.finish()
     else:
         await state.finish()
 
